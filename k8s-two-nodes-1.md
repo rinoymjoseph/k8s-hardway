@@ -20,6 +20,10 @@ ff02::2 ip6-allrouters
 192.168.0.161 k8s-worker-1
 EOF
 
+# Create directories
+
+mkdir ~/downloads
+cd ~/downloads
 
 # Install kubectl
 
@@ -29,15 +33,20 @@ sudo mv kubectl /usr/local/bin/
 
 # Install cfssl
 
-wget -q --show-progress --https-only --timestamping https://github.com/cloudflare/cfssl/releases/download/v1.6.1/cfssl_1.6.1_linux_amd64 https://github.com/cloudflare/cfssl/releases/download/v1.6.1/cfssljson_1.6.1_linux_amd64
-chmod +x cfssl_1.6.1_linux_amd64 cfssljson_1.6.1_linux_amd64
-sudo mv cfssl_1.6.1_linux_amd64 /usr/local/bin/cfssl
-sudo mv cfssljson_1.6.1_linux_amd64 /usr/local/bin/cfssljson
+<!-- wget -q --show-progress --https-only --timestamping https://github.com/cloudflare/cfssl/releases/download/v1.6.1/cfssl_1.6.1_linux_amd64 https://github.com/cloudflare/cfssl/releases/download/v1.6.1/cfssljson_1.6.1_linux_amd64 -->
+
+wget https://github.com/cloudflare/cfssl/releases/download/v1.6.3/cfssl_1.6.3_linux_amd64
+wget https://github.com/cloudflare/cfssl/releases/download/v1.6.3/cfssljson_1.6.3_linux_amd64
+
+chmod +x cfssl_1.6.3_linux_amd64 cfssljson_1.6.3_linux_amd64
+sudo mv cfssl_1.6.3_linux_amd64 /usr/local/bin/cfssl
+sudo mv cfssljson_1.6.3_linux_amd64 /usr/local/bin/cfssljson
 
 # Provisioning CA
 
 - Create a few directories for the TLS certs to live in.
 
+cd ~
 mkdir -p pki/{admin,api,ca,clients,controller,front-proxy,proxy,scheduler,service-account,users}
 
 TLS_C="IN"
@@ -289,7 +298,7 @@ cfssl gencert \
   -ca=pki/ca/ca.pem \
   -ca-key=pki/ca/ca-key.pem \
   -config=pki/ca/ca-config.json \
-  -hostname=192.168.0.151,127.0.0.1,kubernetes.default \
+  -hostname=10.32.0.1,192.168.0.151,127.0.0.1,kubernetes.default \
   -profile=kubernetes \
   pki/api/kubernetes-csr.json | cfssljson -bare pki/api/kubernetes
 -------------------------------------------------------------------------------------------------------------------
@@ -326,9 +335,13 @@ cfssl gencert \
 # If you’re on a single node then simply copy all files listed below 
 # for both controllers & workers to the single node.
 
-scp pki/ca/ca.pem pki/clients/k8s-worker-1-key.pem pki/clients/k8s-worker-1.pem ability@k8s-worker-1:~/
+ssh ability@k8s-worker-1 "mkdir -p ~/pki"
 
-scp pki/ca/ca.pem pki/ca/ca-key.pem pki/api/kubernetes-key.pem pki/api/kubernetes.pem pki/service-account/service-account-key.pem pki/service-account/service-account.pem pki/front-proxy/front-proxy-key.pem pki/front-proxy/front-proxy.pem ability@k8s-controller-1:~/
+scp pki/ca/ca.pem pki/clients/k8s-worker-1-key.pem pki/clients/k8s-worker-1.pem ability@k8s-worker-1:~/pki/
+
+ssh ability@k8s-controller-1 "mkdir -p ~/pki"
+
+scp pki/ca/ca.pem pki/ca/ca-key.pem pki/api/kubernetes-key.pem pki/api/kubernetes.pem pki/service-account/service-account-key.pem pki/service-account/service-account.pem pki/front-proxy/front-proxy-key.pem pki/front-proxy/front-proxy.pem ability@k8s-controller-1:~/pki
 --------------------------------------------------------------------------------------------------------------------
 
 # Generate Worker kubeconfigs
@@ -441,9 +454,13 @@ kubectl config use-context default --kubeconfig=configs/admin/admin.kubeconfig
 # Finally, let’s move the kubeconfigs
 # Now push them as you did with the TLS certs and configs.
 
-scp configs/clients/k8s-worker-1.kubeconfig configs/proxy/kube-proxy.kubeconfig ability@k8s-worker-1:~/
+ssh ability@k8s-worker-1 "mkdir ~/configs"
 
-scp configs/admin/admin.kubeconfig configs/controller/kube-controller-manager.kubeconfig configs/scheduler/kube-scheduler.kubeconfig ability@k8s-controller-1:~/
+scp configs/clients/k8s-worker-1.kubeconfig configs/proxy/kube-proxy.kubeconfig ability@k8s-worker-1:~/configs
+
+ssh ability@k8s-controller-1 "mkdir ~/configs"
+
+scp configs/admin/admin.kubeconfig configs/controller/kube-controller-manager.kubeconfig configs/scheduler/kube-scheduler.kubeconfig ability@k8s-controller-1:~/configs
 ------------------------------------------------------------------------------------------------------------------
 # Generating the data encryption key and config
 # This will be used for encrypting data between nodes.
@@ -468,4 +485,6 @@ EOF
 
 # Now push them to the controller(s) or the single node if that’s what you’re using.
 
-scp data-encryption/encryption-config.yaml ability@k8s-controller-1:~/
+ssh ability@k8s-controller-1 "mkdir ~/data-encryption"
+
+scp data-encryption/encryption-config.yaml ability@k8s-controller-1:~/data-encryption
