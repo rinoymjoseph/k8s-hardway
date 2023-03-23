@@ -1,0 +1,1 @@
+kubectl expose deployment  whoami --type=NodePort --port=80
