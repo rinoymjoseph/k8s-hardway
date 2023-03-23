@@ -1,0 +1,14 @@
+controllers:
+  - host_name: k8s-controller-1
+    ip_address: 192.168.0.151
+  - host_name: k8s-controller-2
+    ip_address: 192.168.0.152
+  - host_name: k8s-controller-3
+    ip_address: 192.168.0.153
+workers:
+  - host_name: k8s-wroker-1
+    ip_address: 192.168.0.161
+  - host_name: k8s-wroker-2
+    ip_address: 192.168.0.162
+  - host_name: k8s-wroker-3
+    ip_address: 192.168.0.163

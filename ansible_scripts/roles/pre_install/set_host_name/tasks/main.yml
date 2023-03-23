@@ -1,0 +1,8 @@
+- name: Show inventory_hostname
+  debug:
+    msg: "{{ inventory_hostname }}"
+
+- name: Set hostname
+  become: true
+  ansible.builtin.hostname:
+    name: "{{ inventory_hostname }}"

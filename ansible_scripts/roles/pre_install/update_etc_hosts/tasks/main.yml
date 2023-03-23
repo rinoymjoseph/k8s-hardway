@@ -1,0 +1,3 @@
+- name: hostvars
+  debug:
+    msg: "{{ groups }}"

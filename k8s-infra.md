@@ -17,7 +17,13 @@
 86:AC:41:AF:EC:2B 192.168.0.148 - k3s-agent-1
 86:AC:41:D7:CF:7B 192.168.0.147 - k3s-master
 86:AC:41:03:C2:7B 192.168.0.146
-86:AC:41:36:AD:BE 192.168.0.145 - k8s-bootstrap
+86:AC:41:36:AD:BE 192.168.0.145
 86:AC:41:55:07:F2 192.168.0.144
 86:AC:41:98:04:17 192.168.0.143
 86:AC:41:3F:AD:DD 192.168.0.142
+
+sudo apt update
+sudo apt install ansible
+ansible-galaxy collection install community.general
+sudo apt install python3-pip
+pip3 install proxmoxer
