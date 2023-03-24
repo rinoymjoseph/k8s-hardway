@@ -1,0 +1,7 @@
+- name: Get ip of host
+  set_fact:
+    ip_address: "{{ hostvars[item].ansible_host }}"
+
+- name: Update workers_host_ip_list
+  set_fact:
+    workers_host_ip_list: "{{ workers_host_ip_list | default({}) | combine ({ item : ip_address }) }}"

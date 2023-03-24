@@ -1,0 +1,29 @@
+- name: set_fact all_host_ip_list
+  set_fact:
+    nodes_host_ip_list: []
+    controllers_host_ip_list: []
+    workers_host_ip_list: []
+  
+- name: Add host_ip to nodes_host_ip_list
+  include_tasks: build_nodes_host_ip_list.yml
+  loop: "{{ groups.nodes }}"
+
+- name: Add host_ip to controllers_host_ip_list
+  include_tasks: build_controllers_host_ip_list.yml
+  loop: "{{ groups.controllers }}"
+
+- name: Add host_ip to workers_host_ip_list
+  include_tasks: build_workers_host_ip_list.yml
+  loop: "{{ groups.workers }}"
+
+- name: nodes_host_ip_list
+  debug:
+    msg: "{{ nodes_host_ip_list }}"
+
+- name: controllers_host_ip_list
+  debug:
+    msg: "{{ controllers_host_ip_list }}"
+
+- name: workers_host_ip_list
+  debug:
+    msg: "{{ workers_host_ip_list }}"

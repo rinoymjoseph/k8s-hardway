@@ -1,3 +1,22 @@
-- name: hostvars
+- name: Update /etc/hosts
+  become: true
+  ansible.builtin.blockinfile:
+    path: /etc/hosts
+    block: |
+      {{ item.value }} {{ item.key }}
+    marker: "# {mark} ANSIBLE MANAGED BLOCK {{ item.value }}"
+  loop: "{{ nodes_host_ip_list | dict2items }}"
+
+- name: Debug - ansible_host
   debug:
-    msg: "{{ groups }}"
+    msg: "{{ inventory_hostname }}"
+
+- name: Replace a localhost entry searching for a literal string to avoid escaping
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    search_string: '127.0.1.1'
+    line: 127.0.1.1 {{ inventory_hostname }}
+    owner: root
+    group: root
+    mode: '0644'
