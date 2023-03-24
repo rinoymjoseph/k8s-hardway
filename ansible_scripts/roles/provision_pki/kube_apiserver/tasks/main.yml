@@ -1,0 +1,21 @@
+- name: Create directory for kube-scheduler cert files
+  file:
+    path: "{{ kube_apiserver_cert_dir }}"
+    state: directory
+
+- name: Prepare kube-scheduler-csr.json
+  template:
+    src: "{{ item }}.j2"
+    dest: "{{ kube_apiserver_cert_dir }}/{{ item }}"
+  with_items:
+    - kubernetes-csr.json
+
+- name: Generate CA certs
+  shell: |
+    cfssl gencert \
+      -ca={{ pki_ca_dir }}/ca.pem \
+      -ca-key={{ pki_ca_dir }}/ca-key.pem \
+      -config={{ pki_ca_dir }}/ca-config.json \
+      -hostname=192.168.0.151,192.168.0.152,192.168.0.153,${KUBERNETES_PUBLIC_ADDRESS},127.0.0.1,kubernetes.default \
+      -profile=kubernetes \
+      {{ kube_apiserver_cert_dir }}/kubernetes-csr.json | cfssljson -bare {{ kube_apiserver_cert_dir }}/kubernetes

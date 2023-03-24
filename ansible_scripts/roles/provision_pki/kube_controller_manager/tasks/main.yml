@@ -1,0 +1,20 @@
+- name: Create directory for kube-controller-manager cert files
+  file:
+    path: "{{ kube_controller_manager_cert_dir }}"
+    state: directory
+
+- name: Prepare kube-controller-manager-csr.json
+  template:
+    src: "{{ item }}.j2"
+    dest: "{{ kube_controller_manager_cert_dir }}/{{ item }}"
+  with_items:
+    - kube-controller-manager-csr.json
+
+- name: Generate CA certs
+  shell: |
+    cfssl gencert \
+      -ca={{ pki_ca_dir }}/ca.pem \
+      -ca-key={{ pki_ca_dir }}/ca-key.pem \
+      -config={{ pki_ca_dir }}/ca-config.json \
+      -profile=kubernetes \
+      {{ kube_controller_manager_cert_dir }}/kube-controller-manager-csr.json | cfssljson -bare {{ kube_controller_manager_cert_dir }}/kube-controller-manager

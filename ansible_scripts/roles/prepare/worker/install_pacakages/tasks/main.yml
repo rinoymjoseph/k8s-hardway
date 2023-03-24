@@ -1,0 +1,66 @@
+- name: Update and upgrade apt packages
+  become: true
+  apt:
+    update_cache: yes
+  register: apt_update
+
+- name: Debug - apt_update
+  debug:
+    msg: "{{ apt_update }}"
+
+- name: Crio install - configure repo
+  become: true
+  shell: |
+    echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/{{ crio_os }}/ /"|sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
+
+- name: Crio install - configure repo
+  become: true
+  shell: |
+    echo "deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/{{ crio_version }}/{{ crio_os }}/ /"|sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:{{ crio_version }}.list
+  
+- name: Crio install - get release key
+  become: true
+  shell: |
+    curl -L https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:{{ crio_version }}/{{ crio_os }}/Release.key | sudo apt-key add -
+
+- name: Crio install - get release key
+  become: true
+  shell: |
+    curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/{{ crio_os }}/Release.key | sudo apt-key add -
+
+- name: Update and upgrade apt packages
+  become: true
+  apt:
+    update_cache: yes
+  register: apt_update_crio
+
+- name: Debug - apt_update_crio
+  debug:
+    msg: "{{ apt_update_crio }}"
+      
+- name: Install package dependencies
+  become: true
+  package:
+    name:
+        - cri-o
+        - cri-o-runc
+        - cri-tools
+    state: present
+  register: apt_install_crio
+
+- name: Debug - apt_install_crio
+  debug:
+    msg: "{{ apt_install_crio }}"
+
+- name: Enable and start crio.service
+  become: true
+  ansible.builtin.systemd:
+    name: crio.service
+    state: started
+    enabled: true
+  register: crio_service_state
+
+- name: Debug - crio_service_state
+  debug:
+    msg: "{{ crio_service_state }}"
+

@@ -1,0 +1,16 @@
+{
+  "CN": "system:kube-proxy",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "{{ TLS_C }}",
+      "L": "{{ TLS_L }}",
+      "O": "system:node-proxier",
+      "OU": "{{ TLS_OU }}",
+      "ST": "{{ TLS_ST }}"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+- name: Create directory for worker cert files
+  file:
+    path: "{{ worker_cert_dir }}"
+    state: directory
+
+- name: Create worker certs and keys
+  include_tasks: provison_worker_pki.yml
+  loop: "{{ workers_host_ip_list | dict2items }}"

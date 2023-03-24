@@ -1,0 +1,21 @@
+- name: Disable swap
+  become: true
+  shell: |
+    swapoff -a
+  
+- name: Disable swap - /etc/fstab
+  become: true
+  replace:
+    path: /etc/fstab
+    regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
+    replace: '# \1'
+
+- name: Daemon reload
+  become: true
+  ansible.builtin.systemd:
+    daemon_reload : true
+  register: daemon_reload
+
+- name: Debug - daemon_reload
+  debug:
+    msg: "{{ daemon_reload }}"

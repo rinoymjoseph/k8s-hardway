@@ -1,0 +1,104 @@
+- name: Create directory for kubernetes packages
+  file:
+    path: "{{ downloads_directory }}/kubernetes"
+    state: directory
+
+- name: Create directory for cni-plugins
+  file:
+    path: "{{ downloads_directory }}/cni-plugins"
+    state: directory
+
+- name: Create directory for cfssl
+  file:
+    path: "{{ downloads_directory }}/cfssl"
+    state: directory
+
+- name: etcd_url
+  set_fact:
+    etcd_url: "{{ packages | selectattr('name','eq', 'etcd') | map(attribute='url') | first }}"
+
+- name: Download etcd
+  get_url:
+    url: "{{ etcd_url }}"
+    dest: "{{ downloads_directory }}/kubernetes"
+
+- name: kubectl_url
+  set_fact:
+    kubectl_url: "{{ packages | selectattr('name','eq', 'kubectl') | map(attribute='url') | first }}"
+
+- name: Download kubectl
+  get_url:
+    url: "{{ kubectl_url }}"
+    dest: "{{ downloads_directory }}/kubernetes"
+
+- name: kube_apiserver_url
+  set_fact:
+    kube_apiserver_url: "{{ packages | selectattr('name','eq', 'kube-apiserver') | map(attribute='url') | first }}"
+
+- name: Download kube-apiserver
+  get_url:
+    url: "{{ kube_apiserver_url }}"
+    dest: "{{ downloads_directory }}/kubernetes"
+
+- name: kube_controller_manager_url
+  set_fact:
+    kube_controller_manager_url: "{{ packages | selectattr('name','eq', 'kube-controller-manager') | map(attribute='url') | first }}"
+
+- name: Download kube-controller-manager
+  get_url:
+    url: "{{ kube_controller_manager_url }}"
+    dest: "{{ downloads_directory }}/kubernetes"
+
+- name: kube_scheduler_url
+  set_fact:
+    kube_scheduler_url: "{{ packages | selectattr('name','eq', 'kube-scheduler') | map(attribute='url') | first }}"
+
+- name: Download kube-scheduler
+  get_url:
+    url: "{{ kube_scheduler_url }}"
+    dest: "{{ downloads_directory }}/kubernetes"
+
+- name: kube_proxy_url
+  set_fact:
+    kube_proxy_url: "{{ packages | selectattr('name','eq', 'kube-proxy') | map(attribute='url') | first }}"
+
+- name: Download kube-proxy
+  get_url:
+    url: "{{ kube_proxy_url }}"
+    dest: "{{ downloads_directory }}/kubernetes"
+
+- name: kubelet_url
+  set_fact:
+    kubelet_url: "{{ packages | selectattr('name','eq', 'kubelet') | map(attribute='url') | first }}"
+
+- name: Download kubelet
+  get_url:
+    url: "{{ kubelet_url }}"
+    dest: "{{ downloads_directory }}/kubernetes"
+
+- name: cni_plugins_url
+  set_fact:
+    cni_plugins_url: "{{ packages | selectattr('name','eq', 'cni-plugins') | map(attribute='url') | first }}"
+
+- name: Download cni-plugins
+  get_url:
+    url: "{{ cni_plugins_url }}"
+    dest: "{{ downloads_directory }}/cni-plugins"
+
+- name: cfssl_url
+  set_fact:
+    cfssl_url: "{{ packages | selectattr('name','eq', 'cfssl') | map(attribute='url') | first }}"
+
+- name: Download cfssl
+  get_url:
+    url: "{{ cfssl_url }}"
+    dest: "{{ downloads_directory }}/cfssl"
+
+- name: cfssljson_url
+  set_fact:
+    cfssljson_url: "{{ packages | selectattr('name','eq', 'cfssljson') | map(attribute='url') | first }}"
+
+- name: Download cfssl
+  get_url:
+    url: "{{ cfssljson_url }}"
+    dest: "{{ downloads_directory }}/cfssl"

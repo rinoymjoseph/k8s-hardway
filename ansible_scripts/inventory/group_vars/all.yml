@@ -1,14 +1,45 @@
-controllers:
-  - host_name: k8s-controller-1
-    ip_address: 192.168.0.151
-  - host_name: k8s-controller-2
-    ip_address: 192.168.0.152
-  - host_name: k8s-controller-3
-    ip_address: 192.168.0.153
-workers:
-  - host_name: k8s-wroker-1
-    ip_address: 192.168.0.161
-  - host_name: k8s-wroker-2
-    ip_address: 192.168.0.162
-  - host_name: k8s-wroker-3
-    ip_address: 192.168.0.163
+k8s_version: v1.23.0
+cfssl_version: 1.6.3
+etcd_version: v3.5.1
+cni_plugins_version: v1.0.1
+crio_version: 1.23
+crio_os: xUbuntu_22.04
+
+packages:
+- name: cfssl
+  url: https://github.com/cloudflare/cfssl/releases/download/v{{ cfssl_version }}/cfssl_{{ cfssl_version }}_linux_amd64
+- name: cfssljson
+  url: https://github.com/cloudflare/cfssl/releases/download/v{{ cfssl_version }}/cfssljson_{{ cfssl_version }}_linux_amd64
+- name: etcd
+  url: https://github.com/etcd-io/etcd/releases/download/{{ etcd_version }}/etcd-{{ etcd_version }}-linux-amd64.tar.gz
+- name: kubectl
+  url: https://storage.googleapis.com/kubernetes-release/release/{{ k8s_version }}/bin/linux/amd64/kubectl
+- name: kube-apiserver
+  url: https://storage.googleapis.com/kubernetes-release/release/{{ k8s_version }}/bin/linux/amd64/kube-apiserver
+- name: kube-controller-manager
+  url: https://storage.googleapis.com/kubernetes-release/release/{{ k8s_version }}/bin/linux/amd64/kube-controller-manager
+- name: kube-scheduler
+  url: https://storage.googleapis.com/kubernetes-release/release/{{ k8s_version }}/bin/linux/amd64/kube-scheduler
+- name: kube-proxy
+  url: https://storage.googleapis.com/kubernetes-release/release/{{ k8s_version }}/bin/linux/amd64/kube-proxy
+- name: kubelet
+  url: https://storage.googleapis.com/kubernetes-release/release/{{ k8s_version }}/bin/linux/amd64/kubelet
+- name: cni-plugins
+  url: https://github.com/containernetworking/plugins/releases/download/{{ cni_plugins_version }}/cni-plugins-linux-amd64-{{ cni_plugins_version }}.tgz
+
+downloads_directory: "{{ ansible_env.HOME + '/downloads' }}"
+
+TLS_C: "IN"
+TLS_L: "Kochi"
+TLS_OU: "Rinoys"
+TLS_ST: "Kerala"
+
+pki_ca_dir: "{{ ansible_env.HOME + '/pki/ca' }}"
+admin_cert_dir: "{{ ansible_env.HOME + '/pki/admin' }}"
+worker_cert_dir: "{{ ansible_env.HOME + '/pki/worker' }}"
+kube_controller_manager_cert_dir: "{{ ansible_env.HOME + '/pki/kube_controller_manager' }}"
+kube_proxy_cert_dir: "{{ ansible_env.HOME + '/pki/kube_proxy' }}"
+kube_scheduler_cert_dir: "{{ ansible_env.HOME + '/pki/kube_scheduler' }}"
+front_proxy_cert_dir: "{{ ansible_env.HOME + '/pki/front_proxy' }}"
+kube_apiserver_cert_dir: "{{ ansible_env.HOME + '/pki/kube_apiserver' }}"
+service_account_cert_dir: "{{ ansible_env.HOME + '/pki/service_account' }}"

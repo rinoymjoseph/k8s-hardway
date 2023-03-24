@@ -1,12 +1,25 @@
 ---
-- hosts: all
-  gather_facts: true
-  roles:
-    - role: build_config
-    - role: pre_install/update_etc_hosts
+# - hosts: workers
+#   gather_facts: true
+#   roles:
+#     - role: prepare/worker/install_dependencies
+#     - role: prepare/worker/disable_swap
 
 # - hosts: all
 #   gather_facts: true
 #   roles:
 #     - role: pre_install/set_host_name
 
+- hosts: bootstrap
+  gather_facts: true
+  roles:
+    #- role: prepare/bootstrap/download_packages
+    - role: provision_pki/ca
+    - role: provision_pki/admin
+    - role: provision_pki/worker
+    - role: provision_pki/kube_controller_manager
+    - role: provision_pki/kube_proxy
+    - role: provision_pki/kube_scheduler
+    - role: provision_pki/front_proxy
+    - role: provision_pki/kube_apiserver
+    - role: provision_pki/service_account

@@ -1,0 +1,20 @@
+- name: Create directory for admin cert files
+  file:
+    path: "{{ service_account_cert_dir }}"
+    state: directory
+
+- name: Prepare service-account-csr.json
+  template:
+    src: "{{ item }}.j2"
+    dest: "{{ service_account_cert_dir }}/{{ item }}"
+  with_items:
+    - service-account-csr.json
+
+- name: Generate CA certs
+  shell: |
+    cfssl gencert \
+    -ca={{ pki_ca_dir }}/ca.pem \
+    -ca-key={{ pki_ca_dir }}/ca-key.pem \
+    -config={{ pki_ca_dir }}/ca-config.json \
+    -profile=kubernetes \
+    {{ service_account_cert_dir }}/service-account-csr.json | cfssljson -bare {{ service_account_cert_dir }}/admin
