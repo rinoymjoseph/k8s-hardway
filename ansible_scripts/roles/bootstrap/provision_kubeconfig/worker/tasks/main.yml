@@ -1,0 +1,10 @@
+- name: Create directory for worker kubeconfigs
+  file:
+    path: "{{ worker_kubeconfig_dir }}"
+    state: directory
+
+- name: Create worker kubeconfig
+  include_tasks: provison_worker_kubeconfig.yml
+  loop: "{{ groups.workers }}"
+  loop_control:
+    loop_var: worker

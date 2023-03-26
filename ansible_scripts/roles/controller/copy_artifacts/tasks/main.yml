@@ -1,0 +1,64 @@
+- name: Fetch packages to controller
+  synchronize:
+    src: "{{ item }}"
+    dest: "{{ node_packages_dir }}"
+  delegate_to: localhost
+  loop:
+    - "{{ node_downloads_dir }}/kubernetes/etcd-{{ etcd_version }}-linux-amd64/etcd"
+    - "{{ node_downloads_dir }}/kubernetes/kube-apiserver"
+    - "{{ node_downloads_dir }}/kubernetes/kube-controller-manager"
+    - "{{ node_downloads_dir }}/kubernetes/kube-scheduler"
+    - "{{ node_downloads_dir }}/kubernetes/kubectl"
+
+- name: Fetch cert files to controller
+  synchronize:
+    src: "{{ item }}"
+    dest: "{{ node_pki_dir }}"
+  delegate_to: localhost
+  loop:
+    - "{{ pki_ca_dir }}/ca.pem"
+    - "{{ pki_ca_dir }}/ca-key.pem"
+    - "{{ kube_apiserver_cert_dir }}/kubernetes.pem"
+    - "{{ kube_apiserver_cert_dir }}/kubernetes-key.pem"
+    - "{{ service_account_cert_dir }}/service-account.pem"
+    - "{{ service_account_cert_dir }}/service-account-key.pem"
+    - "{{ front_proxy_cert_dir }}/front-proxy.pem"
+    - "{{ front_proxy_cert_dir }}/front-proxy-key.pem"
+
+- name: Fetch kubeconfig files to controller
+  synchronize:
+    src: "{{ item }}"
+    dest: "{{ node_kubeconfigs_dir }}"
+  delegate_to: localhost
+  loop:
+    - "{{ admin_kubeconfig_dir }}/admin.kubeconfig"
+    - "{{ kube_controller_manager_kubeconfig_dir }}/kube-controller-manager.kubeconfig"
+    - "{{ kube_scheduler_kubeconfig_dir }}/kube-scheduler.kubeconfig"
+
+- name: Copy files to /etc/etcd
+  become: true
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /etc/etcd
+  loop:
+    - "{{ node_pki_dir }}/ca.pem"
+    - "{{ node_pki_dir }}/kubernetes.pem"
+    - "{{ node_pki_dir }}/kubernetes-key.pem"
+  
+- name: Copy files to /var/lib/kubernetes/
+  become: true
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /var/lib/kubernetes
+  loop:
+    - "{{ node_pki_dir }}/ca.pem"
+    - "{{ node_pki_dir }}/ca-key.pem"
+    - "{{ node_pki_dir }}/kubernetes.pem"
+    - "{{ node_pki_dir }}/kubernetes-key.pem"
+    - "{{ node_pki_dir }}/service-account.pem"
+    - "{{ node_pki_dir }}/service-account-key.pem"
+    - "{{ node_pki_dir }}/front-proxy.pem"
+    - "{{ node_pki_dir }}/front-proxy-key.pem"
+    - "{{ node_kubeconfigs_dir }}/kube-controller-manager.kubeconfig"
+    - "{{ node_kubeconfigs_dir }}/ kube-scheduler.kubeconfig.kubeconfig"
+

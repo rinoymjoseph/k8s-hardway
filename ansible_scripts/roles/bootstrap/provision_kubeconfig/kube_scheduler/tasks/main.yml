@@ -1,0 +1,31 @@
+- name: Create directory for kube-scheduler kubeconfig
+  file:
+    path: "{{ kube_scheduler_kubeconfig_dir }}"
+    state: directory
+
+- name: Set-cluster
+  shell: |
+    kubectl config set-cluster rinoys \
+      --certificate-authority={{ pki_ca_dir }}/ca.pem \
+      --embed-certs=true \
+      --server=https://127.0.0.1:6443 \
+      --kubeconfig={{ kube_scheduler_kubeconfig_dir }}/kube-scheduler.kubeconfig
+
+- name: Set-credentials
+  shell: |
+    kubectl config set-credentials system:kube-scheduler \
+      --client-certificate={{ kube_scheduler_cert_dir }}/kube-scheduler.pem \
+      --client-key={{ kube_scheduler_cert_dir }}/kube-scheduler-key.pem \
+      --embed-certs=true \
+      --kubeconfig={{ kube_scheduler_kubeconfig_dir }}/kube-scheduler.kubeconfig
+
+- name: Set-context
+  shell: |
+    kubectl config set-context default \
+      --cluster=rinoys \
+      --user=system:kube-scheduler \
+      --kubeconfig={{ kube_scheduler_kubeconfig_dir }}/kube-scheduler.kubeconfig
+
+- name: Use-context
+  shell: |
+    kubectl config use-context default --kubeconfig={{ kube_scheduler_kubeconfig_dir }}/kube-scheduler.kubeconfig

@@ -1,0 +1,4 @@
+- name: Create data encryption config directory
+  file:
+    path: "{{ de_config_dir }}"
+    state: directory

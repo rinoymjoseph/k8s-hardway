@@ -27,7 +27,12 @@ packages:
 - name: cni-plugins
   url: https://github.com/containernetworking/plugins/releases/download/{{ cni_plugins_version }}/cni-plugins-linux-amd64-{{ cni_plugins_version }}.tgz
 
-downloads_directory: "{{ ansible_env.HOME + '/downloads' }}"
+node_downloads_dir: "{{ ansible_env.HOME + '/downloads' }}"
+node_artifacts_dir: "{{ ansible_env.HOME + '/artifacts' }}"
+node_packages_dir: "{{ node_artifacts_dir + '/packages' }}"
+node_pki_dir: "{{ node_artifacts_dir + '/pki' }}"
+node_kubeconfigs_dir: "{{ node_artifacts_dir + '/kubeconfigs' }}"
+node_de_config_dir: "{{ node_artifacts_dir + '/de_config' }}"
 
 TLS_C: "IN"
 TLS_L: "Kochi"
@@ -43,3 +48,19 @@ kube_scheduler_cert_dir: "{{ ansible_env.HOME + '/pki/kube_scheduler' }}"
 front_proxy_cert_dir: "{{ ansible_env.HOME + '/pki/front_proxy' }}"
 kube_apiserver_cert_dir: "{{ ansible_env.HOME + '/pki/kube_apiserver' }}"
 service_account_cert_dir: "{{ ansible_env.HOME + '/pki/service_account' }}"
+
+kubeconfig_dir: "{{ ansible_env.HOME + '/kubeconfig' }}"
+worker_kubeconfig_dir: "{{ kubeconfig_dir + '/worker' }}"
+kube_proxy_kubeconfig_dir: "{{ kubeconfig_dir + '/kube_proxy' }}"
+kube_controller_manager_kubeconfig_dir: "{{ kubeconfig_dir + '/kube_controller_manager' }}"
+kube_scheduler_kubeconfig_dir: "{{ kubeconfig_dir + '/kube_scheduler' }}"
+admin_kubeconfig_dir: "{{ kubeconfig_dir + '/admin' }}"
+
+de_config_dir: "{{ ansible_env.HOME + '/de_config' }}"
+
+nodes_host_ip_list: []
+controllers_host_ip_list: []
+workers_host_ip_list: []
+load_balancer_ip_address: "{{ hostvars.load_balancer.ansible_host }}"
+controller_ip_list: []
+worker_ip_list: []

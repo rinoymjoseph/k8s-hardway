@@ -1,0 +1,5 @@
+---
+- hosts: bootstrap
+  gather_facts: true
+  roles:
+      - role: build_config

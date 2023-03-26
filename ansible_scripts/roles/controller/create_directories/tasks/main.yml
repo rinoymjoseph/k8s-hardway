@@ -1,0 +1,19 @@
+- name: Create download directory
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "{{ node_packages_dir }}"
+    - "{{ node_pki_dir }}"
+    - "{{ node_kubeconfigs_dir }}"
+
+- name: Create directories
+  become: true
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - /etc/kubernetes/config
+    - /etc/etcd
+    - /var/lib/etcd
+    - /var/lib/kubernetes/

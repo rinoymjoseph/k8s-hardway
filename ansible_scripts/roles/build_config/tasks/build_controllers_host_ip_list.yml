@@ -5,3 +5,11 @@
 - name: Update controllers_host_ip_list
   set_fact:
     controllers_host_ip_list: "{{ controllers_host_ip_list | default({}) | combine ({ item : ip_address }) }}"
+
+- name: Update controller_ip_list
+  set_fact:
+    controller_ip_list: "{{ controller_ip_list + [ ip_address ] }}"
+
+- name: controller_ip_list
+  debug:
+    msg: "{{ controller_ip_list }}"    

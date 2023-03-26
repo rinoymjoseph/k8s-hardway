@@ -1,0 +1,7 @@
+---
+- hosts: controllers
+  gather_facts: true
+  roles:
+    - role: build_config
+    - role: controller/create_directories
+    - role: controller/copy_artifacts

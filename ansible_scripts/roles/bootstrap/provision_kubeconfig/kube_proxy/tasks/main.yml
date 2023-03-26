@@ -1,0 +1,31 @@
+- name: Create directory for kube-proxy kubeconfig
+  file:
+    path: "{{ kube_proxy_kubeconfig_dir }}"
+    state: directory
+
+- name: Set-cluster
+  shell: |
+    kubectl config set-cluster rinoys\
+      --certificate-authority={{ pki_ca_dir }}/ca.pem \
+      --embed-certs=true \
+      --server=https://{{ load_balancer_ip_address }}:6443 \
+      --kubeconfig={{ kube_proxy_kubeconfig_dir }}/kube-proxy.kubeconfig
+
+- name: Set-credentials
+  shell: |
+    kubectl config set-credentials system:kube-proxy \
+      --client-certificate={{ kube_proxy_cert_dir }}/kube-proxy.pem \
+      --client-key={{ kube_proxy_cert_dir }}/kube-proxy-key.pem \
+      --embed-certs=true \
+      --kubeconfig={{ kube_proxy_kubeconfig_dir }}/kube-proxy.kubeconfig
+
+- name: Set-context
+  shell: |
+    kubectl config set-context default \
+      --cluster=rinoys \
+      --user=system:kube-proxy \
+      --kubeconfig={{ kube_proxy_kubeconfig_dir }}/kube-proxy.kubeconfig
+
+- name: Use-context
+  shell: |
+    kubectl config use-context default --kubeconfig={{ kube_proxy_kubeconfig_dir }}/kube-proxy.kubeconfig

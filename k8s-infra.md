@@ -28,3 +28,5 @@ ansible-galaxy collection install community.general
 sudo apt install python3-pip
 pip3 install proxmoxer
 sudo apt install ansible-core
+python3 -m pip install --upgrade --user ansible
+ansible-galaxy collection install ansible.posix

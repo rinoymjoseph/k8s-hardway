@@ -5,3 +5,11 @@
 - name: Update workers_host_ip_list
   set_fact:
     workers_host_ip_list: "{{ workers_host_ip_list | default({}) | combine ({ item : ip_address }) }}"
+
+- name: Update worker_ip_list
+  set_fact:
+    worker_ip_list: "{{ worker_ip_list + [ ip_address ] }}"
+
+- name: worker_ip_list
+  debug:
+    msg: "{{ worker_ip_list }}"  

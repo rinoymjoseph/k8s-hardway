@@ -1,0 +1,16 @@
+- name: Create directory for ca files
+  file:
+    path: "{{ pki_ca_dir }}"
+    state: directory
+
+- name: Prepare ca-config.json
+  template:
+    src: "{{ item }}.j2"
+    dest: "{{ pki_ca_dir }}/{{ item }}"
+  with_items:
+    - ca-config.json
+    - ca-csr.json
+
+- name: Generate CA certs
+  shell: |
+    cfssl gencert -initca {{ pki_ca_dir }}/ca-csr.json | cfssljson -bare {{ pki_ca_dir }}/ca

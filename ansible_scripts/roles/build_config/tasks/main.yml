@@ -1,8 +1,13 @@
-- name: set_fact all_host_ip_list
-  set_fact:
-    nodes_host_ip_list: []
-    controllers_host_ip_list: []
-    workers_host_ip_list: []
+# - name: set_fact all_host_ip_list
+#   set_fact:
+#     nodes_host_ip_list: []
+#     controllers_host_ip_list: []
+#     workers_host_ip_list: []
+#     load_balancer_ip_address: "{{ hostvars.load_balancer.ansible_host }}"
+
+- name: load_balancer_ip_address
+  debug:
+    msg: "{{ load_balancer_ip_address }}"
   
 - name: Add host_ip to nodes_host_ip_list
   include_tasks: build_nodes_host_ip_list.yml
@@ -15,6 +20,14 @@
 - name: Add host_ip to workers_host_ip_list
   include_tasks: build_workers_host_ip_list.yml
   loop: "{{ groups.workers }}"
+
+- name: controller_ip_list
+  debug:
+    msg: "{{ controller_ip_list }}"
+
+- name: worker_ip_list
+  debug:
+    msg: "{{ worker_ip_list }}"
 
 - name: nodes_host_ip_list
   debug:
