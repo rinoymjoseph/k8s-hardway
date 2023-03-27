@@ -2,20 +2,20 @@
 - hosts: bootstrap
   gather_facts: true
   roles:
-      - role: build_config
-      - role: bootstrap/download_packages
-      - role: bootstrap/install_packages
-      - role: bootstrap/provision_pki/ca
-      - role: bootstrap/provision_pki/admin
-      - role: bootstrap/provision_pki/worker
-      - role: bootstrap/provision_pki/kube_controller_manager
-      - role: bootstrap/provision_pki/kube_proxy
-      - role: bootstrap/provision_pki/kube_scheduler
-      - role: bootstrap/provision_pki/front_proxy
-      - role: bootstrap/provision_pki/kube_apiserver
-      - role: bootstrap/provision_pki/service_account
-      - role: bootstrap/provision_kubeconfig/worker
-      - role: bootstrap/provision_kubeconfig/kube_proxy
-      - role: bootstrap/provision_kubeconfig/kube_controller_manager
-      - role: bootstrap/provision_kubeconfig/kube_scheduler
-      - role: bootstrap/provision_kubeconfig/admin
+    - role: build_config
+    - role: bootstrap/download_packages
+    - role: bootstrap/install_packages
+    - role: bootstrap/provision_pki/ca
+    - role: bootstrap/provision_pki/admin
+    - role: bootstrap/provision_pki/worker
+    - role: bootstrap/provision_pki/kube_controller_manager
+    - role: bootstrap/provision_pki/kube_proxy
+    - role: bootstrap/provision_pki/kube_scheduler
+    - role: bootstrap/provision_pki/front_proxy
+    - role: bootstrap/provision_pki/kube_apiserver
+    - role: bootstrap/provision_pki/service_account
+    - role: bootstrap/provision_kubeconfig/worker
+    - role: bootstrap/provision_kubeconfig/kube_proxy
+    - role: bootstrap/provision_kubeconfig/kube_controller_manager
+    - role: bootstrap/provision_kubeconfig/kube_scheduler
+    - role: bootstrap/provision_kubeconfig/admin
