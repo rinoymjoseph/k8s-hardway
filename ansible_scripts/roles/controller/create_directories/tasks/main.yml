@@ -6,6 +6,7 @@
     - "{{ node_packages_dir }}"
     - "{{ node_pki_dir }}"
     - "{{ node_kubeconfigs_dir }}"
+    - "{{ node_de_config_dir }}"
 
 - name: Create directories
   become: true

@@ -4,11 +4,11 @@
     dest: "{{ node_packages_dir }}"
   delegate_to: localhost
   loop:
-    - "{{ node_downloads_dir }}/kubernetes/etcd-{{ etcd_version }}-linux-amd64/etcd"
-    - "{{ node_downloads_dir }}/kubernetes/kube-apiserver"
-    - "{{ node_downloads_dir }}/kubernetes/kube-controller-manager"
-    - "{{ node_downloads_dir }}/kubernetes/kube-scheduler"
-    - "{{ node_downloads_dir }}/kubernetes/kubectl"
+    - "{{ downloads_dir }}/kubernetes/etcd-{{ etcd_version }}-linux-amd64/etcd"
+    - "{{ downloads_dir }}/kubernetes/kube-apiserver"
+    - "{{ downloads_dir }}/kubernetes/kube-controller-manager"
+    - "{{ downloads_dir }}/kubernetes/kube-scheduler"
+    - "{{ downloads_dir }}/kubernetes/kubectl"
 
 - name: Fetch cert files to controller
   synchronize:
@@ -35,11 +35,18 @@
     - "{{ kube_controller_manager_kubeconfig_dir }}/kube-controller-manager.kubeconfig"
     - "{{ kube_scheduler_kubeconfig_dir }}/kube-scheduler.kubeconfig"
 
+- name: Fetch data encryption-config file to controller
+  synchronize:
+    src: "{{ de_config_dir }}/encryption-config.yaml"
+    dest: "{{ node_de_config_dir }}"
+  delegate_to: localhost
+
 - name: Copy files to /etc/etcd
   become: true
   ansible.builtin.copy:
     src: "{{ item }}"
     dest: /etc/etcd
+    remote_src: true
   loop:
     - "{{ node_pki_dir }}/ca.pem"
     - "{{ node_pki_dir }}/kubernetes.pem"
@@ -50,6 +57,7 @@
   ansible.builtin.copy:
     src: "{{ item }}"
     dest: /var/lib/kubernetes
+    remote_src: true
   loop:
     - "{{ node_pki_dir }}/ca.pem"
     - "{{ node_pki_dir }}/ca-key.pem"
@@ -60,5 +68,6 @@
     - "{{ node_pki_dir }}/front-proxy.pem"
     - "{{ node_pki_dir }}/front-proxy-key.pem"
     - "{{ node_kubeconfigs_dir }}/kube-controller-manager.kubeconfig"
-    - "{{ node_kubeconfigs_dir }}/kube-scheduler.kubeconfig.kubeconfig"
+    - "{{ node_kubeconfigs_dir }}/kube-scheduler.kubeconfig"
+    - "{{ node_de_config_dir }}/encryption-config.yaml"
 

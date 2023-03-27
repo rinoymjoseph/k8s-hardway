@@ -1,0 +1,32 @@
+- name: Copy kube-scheduler to /usr/local/bin
+  become: true
+  ansible.builtin.copy:
+    src: "{{ node_packages_dir }}/kube-scheduler"
+    dest: /usr/local/bin
+    remote_src: true
+
+- name: Set execution permission on kube-scheduler
+  become: true
+  file:
+    path: /usr/local/bin/kube-scheduler
+    mode: +x
+
+- name: Create kube-scheduler.yaml 
+  become: true
+  template:
+    src: kube-scheduler.yaml.j2
+    dest: /etc/kubernetes/config/kube-scheduler.yaml
+
+- name: Create service file for kube-scheduler 
+  become: true
+  template:
+    src: kube-scheduler.service.j2
+    dest: /etc/systemd/system/kube-scheduler.service
+
+- name: Start kube-scheduler
+  become: true
+  ansible.builtin.systemd:
+    name: kube-scheduler
+    daemon_reload: true
+    state: started  
+    enabled: true

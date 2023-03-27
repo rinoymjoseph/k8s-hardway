@@ -27,7 +27,7 @@ packages:
 - name: cni-plugins
   url: https://github.com/containernetworking/plugins/releases/download/{{ cni_plugins_version }}/cni-plugins-linux-amd64-{{ cni_plugins_version }}.tgz
 
-node_downloads_dir: "{{ ansible_env.HOME + '/downloads' }}"
+# node directories
 node_artifacts_dir: "{{ ansible_env.HOME + '/artifacts' }}"
 node_packages_dir: "{{ node_artifacts_dir + '/packages' }}"
 node_pki_dir: "{{ node_artifacts_dir + '/pki' }}"
@@ -39,6 +39,8 @@ TLS_L: "Kochi"
 TLS_OU: "Rinoys"
 TLS_ST: "Kerala"
 
+# bootstrap directories
+downloads_dir: "{{ ansible_env.HOME + '/downloads' }}"
 pki_ca_dir: "{{ ansible_env.HOME + '/pki/ca' }}"
 admin_cert_dir: "{{ ansible_env.HOME + '/pki/admin' }}"
 worker_cert_dir: "{{ ansible_env.HOME + '/pki/worker' }}"

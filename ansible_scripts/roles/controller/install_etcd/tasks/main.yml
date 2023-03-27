@@ -1,9 +1,30 @@
-- name: Debug | ansible_ssh_host
-  debug: 
-    msg: "{{ inventory_hostname }}"
+- name: Set_fact | ansible_host
+  set_fact: 
+    controller_ip_address: "{{ ansible_host }}"
+
+- name: Copy etcd to /usr/local/bin
+  become: true
+  ansible.builtin.copy:
+    src: "{{ node_packages_dir }}/etcd"
+    dest: /usr/local/bin
+    remote_src: true
+
+- name: Set execution permission on etcd
+  become: true
+  file:
+    path: /usr/local/bin/etcd
+    mode: +x
 
 - name: Create service file for etcd 
   become: true
   template:
     src: etcd.service.j2
     dest: /etc/systemd/system/etcd.service
+
+- name: Start etcd
+  become: true
+  ansible.builtin.systemd:
+    name: etcd
+    daemon_reload: true
+    state: started  
+    enabled: true

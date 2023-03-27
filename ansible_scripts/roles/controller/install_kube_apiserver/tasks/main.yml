@@ -1,0 +1,32 @@
+- name: Copy kube-apiserver to /usr/local/bin
+  become: true
+  ansible.builtin.copy:
+    src: "{{ node_packages_dir }}/kube-apiserver"
+    dest: /usr/local/bin
+    remote_src: true
+
+- name: Set execution permission on kube-apiserver
+  become: true
+  file:
+    path: /usr/local/bin/kube-apiserver
+    mode: +x
+
+- name: Create audit policy kube-apiserver 
+  become: true
+  template:
+    src: audit-policy.yaml.j2
+    dest: /etc/kubernetes/audit-policy.yaml
+
+- name: Create service file for kube-apiserver 
+  become: true
+  template:
+    src: kube-apiserver.service.j2
+    dest: /etc/systemd/system/kube-apiserver.service
+
+- name: Start kube-apiserver
+  become: true
+  ansible.builtin.systemd:
+    name: kube-apiserver
+    daemon_reload: true
+    state: started  
+    enabled: true

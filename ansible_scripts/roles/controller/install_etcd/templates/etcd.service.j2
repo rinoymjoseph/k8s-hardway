@@ -2,23 +2,23 @@
 Description=etcd
 Documentation=https://github.com/coreos
 [Service]
-ExecStart=/usr/local/bin/etcd \\
-  --name k8s-controller-1 \\
-  --data-dir=/var/lib/etcd \\
-  --listen-peer-urls https://{{ controller_ip_address }}:2380 \\
-  --listen-client-urls https://{{ controller_ip_address }}:2379,https://127.0.0.1:2379 \\
-  --initial-advertise-peer-urls https://{{ controller_ip_address  }}:2380 \\
-  --initial-cluster k8s-controller-1=https://192.168.0.151:2380 \\
-  --initial-cluster-state new \\
-  --initial-cluster-token etcd-cluster-1 \\
-  --advertise-client-urls https://{{ controller_ip_address }}:2379 \\
-  --cert-file=/etc/etcd/kubernetes.pem \\
-  --key-file=/etc/etcd/kubernetes-key.pem \\
-  --client-cert-auth \\
-  --trusted-ca-file=/etc/etcd/ca.pem \\
-  --peer-cert-file=/etc/etcd/kubernetes.pem \\
-  --peer-key-file=/etc/etcd/kubernetes-key.pem \\
-  --peer-client-cert-auth \\
+ExecStart=/usr/local/bin/etcd \
+  --name k8s-controller-1 \
+  --data-dir=/var/lib/etcd \
+  --listen-peer-urls https://{{ controller_ip_address }}:2380 \
+  --listen-client-urls https://{{ controller_ip_address }}:2379,https://127.0.0.1:2379 \
+  --initial-advertise-peer-urls https://{{ controller_ip_address  }}:2380 \
+  --initial-cluster k8s-controller-1=https://192.168.0.151:2380 \
+  --initial-cluster-state new \
+  --initial-cluster-token etcd-cluster-1 \
+  --advertise-client-urls https://{{ controller_ip_address }}:2379 \
+  --cert-file=/etc/etcd/kubernetes.pem \
+  --key-file=/etc/etcd/kubernetes-key.pem \
+  --client-cert-auth \
+  --trusted-ca-file=/etc/etcd/ca.pem \
+  --peer-cert-file=/etc/etcd/kubernetes.pem \
+  --peer-key-file=/etc/etcd/kubernetes-key.pem \
+  --peer-client-cert-auth \
   --peer-trusted-ca-file=/etc/etcd/ca.pem
 Restart=on-failure
 RestartSec=5

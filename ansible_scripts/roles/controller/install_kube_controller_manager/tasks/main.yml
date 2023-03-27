@@ -1,0 +1,26 @@
+- name: Copy kube-controller-manager to /usr/local/bin
+  become: true
+  ansible.builtin.copy:
+    src: "{{ node_packages_dir }}/kube-controller-manager"
+    dest: /usr/local/bin
+    remote_src: true
+
+- name: Set execution permission on kube-controller-manager
+  become: true
+  file:
+    path: /usr/local/bin/kube-controller-manager
+    mode: +x
+
+- name: Create service file for kube-controller-manager 
+  become: true
+  template:
+    src: kube-controller-manager.service.j2
+    dest: /etc/systemd/system/kube-controller-manager.service
+
+- name: Start kube-controller-manager
+  become: true
+  ansible.builtin.systemd:
+    name: kube-controller-manager
+    daemon_reload: true
+    state: started  
+    enabled: true

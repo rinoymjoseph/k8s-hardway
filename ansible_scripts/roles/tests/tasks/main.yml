@@ -1,0 +1,10 @@
+- name: Copy files to /etc/etcd
+  #become: true
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /etc/etcd
+    remote_src: true
+  loop:
+    - "{{ node_pki_dir }}/ca.pem"
+    # - "{{ node_pki_dir }}/kubernetes.pem"
+    # - "{{ node_pki_dir }}/kubernetes-key.pem"

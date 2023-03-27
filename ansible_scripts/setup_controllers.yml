@@ -3,6 +3,9 @@
   gather_facts: true
   roles:
     - role: build_config
-    # - role: controller/create_directories
-    # - role: controller/copy_artifacts
+    #- role: controller/create_directories
+    #- role: controller/copy_artifacts
     - role: controller/install_etcd
+    - role: controller/install_kube_apiserver
+    - role: controller/install_kube_controller_manager
+    - role: controller/install_kube_scheduler
