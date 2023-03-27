@@ -3,12 +3,18 @@
     worker_host_name: "{{ worker_host_ip.key }}"
     worker_ip_address: "{{ worker_host_ip.value }}"
 
-- name: Prepare worker-csr.json
+- name: Check if {{ worker_host_name }}.pem file exists
+  stat:
+    path: "{{ worker_cert_dir }}/{{ worker_host_name }}.pem"
+  register: worker_pem_file
+
+- name: Prepare {{ worker_host_name }}-csr.json
   template:
     src: "{{ item }}.j2"
     dest: "{{ worker_cert_dir }}/{{ worker_host_name }}-csr.json"
   with_items:
     - worker-csr.json
+  when: not worker_pem_file.stat.exists
 
 - name: Generate CA certs
   shell: |
@@ -19,3 +25,4 @@
       -hostname={{ worker_host_name }},{{ worker_ip_address }} \
       -profile=kubernetes \
       {{ worker_cert_dir }}/{{ worker_host_name }}-csr.json | cfssljson -bare {{ worker_cert_dir }}/{{ worker_host_name }}
+  when: not worker_pem_file.stat.exists

@@ -1,20 +1,30 @@
-- name: Create directory for admin cert files
-  file:
-    path: "{{ admin_cert_dir }}"
-    state: directory
+- name: Check if admin.pem file exists
+  stat:
+    path: "{{ admin_cert_dir }}/admin.pem"
+  register: admin_pem_file
 
-- name: Prepare admin-csr.json
-  template:
-    src: "{{ item }}.j2"
-    dest: "{{ admin_cert_dir }}/{{ item }}"
-  with_items:
-    - admin-csr.json
+- name: Provison admin pki
+  block:
 
-- name: Generate CA certs
-  shell: |
-    cfssl gencert \
-    -ca={{ pki_ca_dir }}/ca.pem \
-    -ca-key={{ pki_ca_dir }}/ca-key.pem \
-    -config={{ pki_ca_dir }}/ca-config.json \
-    -profile=kubernetes \
-    {{ admin_cert_dir }}/admin-csr.json | cfssljson -bare {{ admin_cert_dir }}/admin
+  - name: Create directory for admin cert files
+    file:
+      path: "{{ admin_cert_dir }}"
+      state: directory
+
+  - name: Prepare admin-csr.json
+    template:
+      src: "{{ item }}.j2"
+      dest: "{{ admin_cert_dir }}/{{ item }}"
+    with_items:
+      - admin-csr.json
+
+  - name: Generate CA certs
+    shell: |
+      cfssl gencert \
+      -ca={{ pki_ca_dir }}/ca.pem \
+      -ca-key={{ pki_ca_dir }}/ca-key.pem \
+      -config={{ pki_ca_dir }}/ca-config.json \
+      -profile=kubernetes \
+      {{ admin_cert_dir }}/admin-csr.json | cfssljson -bare {{ admin_cert_dir }}/admin
+
+  when: not admin_pem_file.stat.exists

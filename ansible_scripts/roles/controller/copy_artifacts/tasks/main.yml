@@ -60,5 +60,5 @@
     - "{{ node_pki_dir }}/front-proxy.pem"
     - "{{ node_pki_dir }}/front-proxy-key.pem"
     - "{{ node_kubeconfigs_dir }}/kube-controller-manager.kubeconfig"
-    - "{{ node_kubeconfigs_dir }}/ kube-scheduler.kubeconfig.kubeconfig"
+    - "{{ node_kubeconfigs_dir }}/kube-scheduler.kubeconfig.kubeconfig"
 

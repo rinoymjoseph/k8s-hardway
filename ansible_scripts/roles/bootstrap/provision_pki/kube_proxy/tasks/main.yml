@@ -1,20 +1,30 @@
-- name: Create directory for kube-proxy cert files
-  file:
-    path: "{{ kube_proxy_cert_dir }}"
-    state: directory
+- name: Check if kube-proxy.pem file exists
+  stat:
+    path: "{{ kube_proxy_cert_dir }}/kube-proxy.pem"
+  register: kube_proxy_pem_file
 
-- name: Prepare kube-proxy-csr.json
-  template:
-    src: "{{ item }}.j2"
-    dest: "{{ kube_proxy_cert_dir }}/{{ item }}"
-  with_items:
-    - kube-proxy-csr.json
+- name: Provision kube-proxy pki
+  block:
 
-- name: Generate CA certs
-  shell: |
-    cfssl gencert \
-      -ca={{ pki_ca_dir }}/ca.pem \
-      -ca-key={{ pki_ca_dir }}/ca-key.pem \
-      -config={{ pki_ca_dir }}/ca-config.json \
-      -profile=kubernetes \
-      {{ kube_proxy_cert_dir }}/kube-proxy-csr.json | cfssljson -bare {{ kube_proxy_cert_dir }}/kube-proxy
+  - name: Create directory for kube-proxy cert files
+    file:
+      path: "{{ kube_proxy_cert_dir }}"
+      state: directory
+
+  - name: Prepare kube-proxy-csr.json
+    template:
+      src: "{{ item }}.j2"
+      dest: "{{ kube_proxy_cert_dir }}/{{ item }}"
+    with_items:
+      - kube-proxy-csr.json
+
+  - name: Generate CA certs
+    shell: |
+      cfssl gencert \
+        -ca={{ pki_ca_dir }}/ca.pem \
+        -ca-key={{ pki_ca_dir }}/ca-key.pem \
+        -config={{ pki_ca_dir }}/ca-config.json \
+        -profile=kubernetes \
+        {{ kube_proxy_cert_dir }}/kube-proxy-csr.json | cfssljson -bare {{ kube_proxy_cert_dir }}/kube-proxy
+
+  when: not kube_proxy_pem_file.stat.exists

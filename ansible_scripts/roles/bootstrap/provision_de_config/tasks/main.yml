@@ -1,4 +1,27 @@
-- name: Create data encryption config directory
-  file:
-    path: "{{ de_config_dir }}"
-    state: directory
+- name: Check if encryption-config file exists
+  stat:
+    path: "{{ de_config_dir }}/encryption-config.yaml"
+  register: encryption_config_file
+
+- name: Create encryption-config
+  block:
+
+  - name: Create data encryption config directory
+    file:
+      path: "{{ de_config_dir }}"
+      state: directory
+
+  - name: Generate random string
+    set_fact:
+      encryption_key: "{{ lookup('community.general.random_string', base64=True, length=32) }}"
+
+  - name: Debug | encryption_key
+    debug:
+      var: encryption_key
+
+  - name: Create encryption-config
+    template:
+      src: templates/encryption-config.yaml.j2
+      dest: "{{de_config_dir }}/encryption-config.yaml"
+
+  when: not encryption_config_file.stat.exists
