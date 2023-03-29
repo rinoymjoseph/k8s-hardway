@@ -29,10 +29,10 @@ kubectl get no
 curl https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico-etcd.yaml -o calico.yaml
 
 # Set ETCD IPs
-sed -i 's/etcd_endpoints:\ "http:\/\/<ETCD_IP>:<ETCD_PORT>"/etcd_endpoints:\ "https:\/\/192.168.0.110:2379,https:\/\/192.168.0.111:2379,https:\/\/192.168.0.112:2379"/g' calico.yaml
+sed -i 's/etcd_endpoints:\ "http:\/\/<ETCD_IP>:<ETCD_PORT>"/etcd_endpoints:\ "https:\/\/192.168.0.151:2379"/g' calico.yaml
 # Set Certificate data in secret
-sed -i "s/# etcd-cert: null/etcd-cert: $(cat pki\/api\/kubernetes.pem | base64 -w 0)/g" calico.yaml
-sed -i "s/# etcd-key: null/etcd-key: $(cat pki\/api\/kubernetes-key.pem | base64 -w 0)/g" calico.yaml
+sed -i "s/# etcd-cert: null/etcd-cert: $(cat pki\/kube_apiserver\/kubernetes.pem | base64 -w 0)/g" calico.yaml
+sed -i "s/# etcd-key: null/etcd-key: $(cat pki\/kube_apiserver\/kubernetes-key.pem | base64 -w 0)/g" calico.yaml
 sed -i "s/# etcd-ca: null/etcd-ca: $(cat pki\/ca\/ca.pem | base64 -w 0)/g" calico.yaml
 # Setup Config map with secret information
 sed -i "s/etcd_ca: \"\"/etcd_ca: \"\/calico-secrets\/etcd-ca\"/g" calico.yaml

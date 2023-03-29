@@ -4,3 +4,8 @@
   roles:
     - role: worker/install_packages
     - role: worker/disable_swap
+    - role: worker/create_directories
+    - role: worker/copy_artifacts
+    - role: worker/configure_cni
+    - role: worker/install_kubelet
+    - role: worker/install_kube_proxy

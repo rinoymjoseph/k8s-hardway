@@ -1,0 +1,62 @@
+- name: Fetch packages to worker
+  synchronize:
+    src: "{{ item }}"
+    dest: "{{ node_packages_dir }}"
+  delegate_to: localhost
+  loop:
+    - "{{ downloads_dir }}/kubernetes/kubectl"
+    - "{{ downloads_dir }}/kubernetes/kube-proxy"
+    - "{{ downloads_dir }}/kubernetes/kubelet"
+    - "{{ downloads_dir }}/cni-plugins/cni-plugins-linux-amd64-{{ cni_plugins_version }}.tgz"
+  
+- name: Fetch cert files to worker
+  synchronize:
+    src: "{{ item }}"
+    dest: "{{ node_pki_dir }}"
+  delegate_to: localhost
+  loop:
+    - "{{ pki_ca_dir }}/ca.pem"
+    - "{{ worker_cert_dir }}/{{ ansible_hostname }}.pem"
+    - "{{ worker_cert_dir }}/{{ ansible_hostname }}-key.pem"
+
+- name: Fetch kubeconfig files to worker
+  synchronize:
+    src: "{{ item }}"
+    dest: "{{ node_kubeconfigs_dir }}"
+  delegate_to: localhost
+  loop:
+    - "{{ kube_proxy_kubeconfig_dir }}/kube-proxy.kubeconfig"
+    - "{{ worker_kubeconfig_dir }}/{{ ansible_hostname }}.kubeconfig"
+  
+- name: Copy files to /var/lib/kubernetes/
+  become: true
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /var/lib/kubernetes
+    remote_src: true
+  loop:
+    - "{{ node_pki_dir }}/ca.pem"
+
+- name: Copy files to /var/lib/kubelet
+  become: true
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /var/lib/kubelet
+    remote_src: true
+  loop:
+    - "{{ node_pki_dir }}/{{ ansible_hostname }}.pem"
+    - "{{ node_pki_dir }}/{{ ansible_hostname }}-key.pem"
+
+- name: Copy {{ ansible_hostname }}.kubeconfig to /var/lib/kubelet/kubeconfig
+  become: true
+  ansible.builtin.copy:
+    src: "{{ node_kubeconfigs_dir }}/{{ ansible_hostname }}.kubeconfig"
+    dest: /var/lib/kubelet/kubeconfig
+    remote_src: true
+  
+- name: Copy files to /var/lib/kube-proxy
+  become: true
+  ansible.builtin.copy:
+    src: "{{ node_kubeconfigs_dir }}/kube-proxy.kubeconfig"
+    dest: /var/lib/kube-proxy/kubeconfig
+    remote_src: true

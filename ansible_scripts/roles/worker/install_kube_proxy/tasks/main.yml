@@ -1,0 +1,36 @@
+- name: Copy kube-proxy to /usr/local/bin
+  become: true
+  ansible.builtin.copy:
+    src: "{{ node_packages_dir }}/kube-proxy"
+    dest: /usr/local/bin
+    remote_src: true
+
+- name: Set execution permission on kube-proxy
+  become: true
+  file:
+    path: /usr/local/bin/kube-proxy
+    mode: +x
+
+- name: worker_pod_cidr
+  set_fact:
+    worker_pod_cidr: "{{ workers | selectattr('host_name','eq', ansible_hostname) | map(attribute='pod_cidr') | first }}"
+
+- name: Create kube-proxy-config.yaml
+  become: true
+  template:
+    src: kube-proxy-config.yaml.j2
+    dest: /var/lib/kube-proxy/kube-proxy-config.yaml
+
+- name: Create service file for kubelet 
+  become: true
+  template:
+    src: kube-proxy.service.j2
+    dest: /etc/systemd/system/kube-proxy.service
+
+- name: Start kube-proxy
+  become: true
+  ansible.builtin.systemd:
+    name: kube-proxy
+    daemon_reload: true
+    state: started  
+    enabled: true

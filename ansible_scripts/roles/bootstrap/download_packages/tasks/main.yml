@@ -1,16 +1,16 @@
 - name: Create directory for kubernetes packages
   file:
-    path: "{{ downloads_directory }}/kubernetes"
+    path: "{{ downloads_dir }}/kubernetes"
     state: directory
 
 - name: Create directory for cni-plugins
   file:
-    path: "{{ downloads_directory }}/cni-plugins"
+    path: "{{ downloads_dir }}/cni-plugins"
     state: directory
 
 - name: Create directory for cfssl
   file:
-    path: "{{ downloads_directory }}/cfssl"
+    path: "{{ downloads_dir }}/cfssl"
     state: directory
 
 - name: etcd_url
@@ -20,7 +20,7 @@
 - name: Download etcd
   get_url:
     url: "{{ etcd_url }}"
-    dest: "{{ downloads_directory }}/kubernetes"
+    dest: "{{ downloads_dir }}/kubernetes"
 
 - name: kubectl_url
   set_fact:
@@ -29,7 +29,7 @@
 - name: Download kubectl
   get_url:
     url: "{{ kubectl_url }}"
-    dest: "{{ downloads_directory }}/kubernetes"
+    dest: "{{ downloads_dir }}/kubernetes"
 
 - name: kube_apiserver_url
   set_fact:
@@ -38,7 +38,7 @@
 - name: Download kube-apiserver
   get_url:
     url: "{{ kube_apiserver_url }}"
-    dest: "{{ downloads_directory }}/kubernetes"
+    dest: "{{ downloads_dir }}/kubernetes"
 
 - name: kube_controller_manager_url
   set_fact:
@@ -47,7 +47,7 @@
 - name: Download kube-controller-manager
   get_url:
     url: "{{ kube_controller_manager_url }}"
-    dest: "{{ downloads_directory }}/kubernetes"
+    dest: "{{ downloads_dir }}/kubernetes"
 
 - name: kube_scheduler_url
   set_fact:
@@ -56,7 +56,7 @@
 - name: Download kube-scheduler
   get_url:
     url: "{{ kube_scheduler_url }}"
-    dest: "{{ downloads_directory }}/kubernetes"
+    dest: "{{ downloads_dir }}/kubernetes"
 
 - name: kube_proxy_url
   set_fact:
@@ -65,7 +65,7 @@
 - name: Download kube-proxy
   get_url:
     url: "{{ kube_proxy_url }}"
-    dest: "{{ downloads_directory }}/kubernetes"
+    dest: "{{ downloads_dir }}/kubernetes"
 
 - name: kubelet_url
   set_fact:
@@ -74,7 +74,7 @@
 - name: Download kubelet
   get_url:
     url: "{{ kubelet_url }}"
-    dest: "{{ downloads_directory }}/kubernetes"
+    dest: "{{ downloads_dir }}/kubernetes"
 
 - name: cni_plugins_url
   set_fact:
@@ -83,7 +83,7 @@
 - name: Download cni-plugins
   get_url:
     url: "{{ cni_plugins_url }}"
-    dest: "{{ downloads_directory }}/cni-plugins"
+    dest: "{{ downloads_dir }}/cni-plugins"
 
 - name: cfssl_url
   set_fact:
@@ -92,7 +92,7 @@
 - name: Download cfssl
   get_url:
     url: "{{ cfssl_url }}"
-    dest: "{{ downloads_directory }}/cfssl"
+    dest: "{{ downloads_dir }}/cfssl"
 
 - name: cfssljson_url
   set_fact:
@@ -101,14 +101,14 @@
 - name: Download cfssl
   get_url:
     url: "{{ cfssljson_url }}"
-    dest: "{{ downloads_directory }}/cfssl"
+    dest: "{{ downloads_dir }}/cfssl"
 
 - name: Extract etcd
   ansible.builtin.unarchive:
-    src: "{{ downloads_directory }}/kubernetes/etcd-{{ etcd_version }}-linux-amd64.tar.gz"
-    dest: "{{ downloads_directory }}/kubernetes"
+    src: "{{ downloads_dir }}/kubernetes/etcd-{{ etcd_version }}-linux-amd64.tar.gz"
+    dest: "{{ downloads_dir }}/kubernetes"
 
 - name: Extract cni plugins
   ansible.builtin.unarchive:
-    src: "{{ downloads_directory }}/cni-plugins/cni-plugins-linux-amd64-{{ cni_plugins_version }}.tgz"
-    dest: "{{ downloads_directory }}/cni-plugins"
+    src: "{{ downloads_dir }}/cni-plugins/cni-plugins-linux-amd64-{{ cni_plugins_version }}.tgz"
+    dest: "{{ downloads_dir }}/cni-plugins"

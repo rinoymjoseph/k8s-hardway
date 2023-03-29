@@ -1,7 +1,7 @@
 - name: Install cfssl
   become: true
   ansible.builtin.copy:
-    src: "{{ downloads_directory }}/cfssl/cfssl_{{ cfssl_version }}_linux_amd64"
+    src: "{{ downloads_dir }}/cfssl/cfssl_{{ cfssl_version }}_linux_amd64"
     dest: /usr/local/bin/cfssl
 
 - name: Set execution permission on cfssl
@@ -13,7 +13,7 @@
 - name: Install cfssljson
   become: true
   ansible.builtin.copy:
-    src: "{{ downloads_directory }}/cfssl/cfssljson_{{ cfssl_version }}_linux_amd64"
+    src: "{{ downloads_dir }}/cfssl/cfssljson_{{ cfssl_version }}_linux_amd64"
     dest: /usr/local/bin/cfssljson
 
 - name: Set execution permission on cfssljson
@@ -25,7 +25,7 @@
 - name: Install kubectl
   become: true
   ansible.builtin.copy:
-    src: "{{ downloads_directory }}/kubernetes/kubectl"
+    src: "{{ downloads_dir }}/kubernetes/kubectl"
     dest: /usr/local/bin
 
 - name: Set execution permission on kubectl

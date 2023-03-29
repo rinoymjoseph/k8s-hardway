@@ -2,5 +2,6 @@
 - hosts: nodes
   gather_facts: true
   roles:
+    - role: build_config
     - role: common/set_host_name
     - role: common/update_etc_hosts

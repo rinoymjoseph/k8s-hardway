@@ -12,8 +12,8 @@ authorization:
 clusterDomain: "cluster.local"
 clusterDNS:
   - "10.32.0.10"
-podCIDR: "10.200.0.0/24"
+podCIDR: "{{ worker_pod_cidr }}"
 resolvConf: "/run/systemd/resolve/resolv.conf"
 runtimeRequestTimeout: "15m"
-tlsCertFile: "/var/lib/kubelet/k8s-worker-1.pem"
-tlsPrivateKeyFile: "/var/lib/kubelet/k8s-worker-1-key.pem"
+tlsCertFile: "/var/lib/kubelet/{{ ansible_hostname }}.pem"
+tlsPrivateKeyFile: "/var/lib/kubelet/{{ ansible_hostname }}-key.pem"

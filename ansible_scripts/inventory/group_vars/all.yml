@@ -66,3 +66,11 @@ workers_host_ip_list: []
 load_balancer_ip_address: "{{ hostvars.load_balancer.ansible_host }}"
 controller_ip_list: []
 worker_ip_list: []
+
+workers:
+- host_name: k8s-worker-1
+  pod_cidr: 10.200.0.0/24
+- host_name: k8s-worker-2
+  pod_cidr: 10.200.1.0/24
+- host_name: k8s-worker-3
+  pod_cidr: 10.200.2.0/24

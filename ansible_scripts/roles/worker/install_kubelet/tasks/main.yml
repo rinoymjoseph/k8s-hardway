@@ -1,0 +1,45 @@
+- name: Copy kubelet to /usr/local/bin
+  become: true
+  ansible.builtin.copy:
+    src: "{{ node_packages_dir }}/kubelet"
+    dest: /usr/local/bin
+    remote_src: true
+
+- name: Set execution permission on kubelet
+  become: true
+  file:
+    path: /usr/local/bin/kubelet
+    mode: +x
+
+- name: worker_pod_cidr
+  set_fact:
+    worker_pod_cidr: "{{ workers | selectattr('host_name','eq', ansible_hostname) | map(attribute='pod_cidr') | first }}"
+
+- name: Create kubelet-config.yaml
+  become: true
+  template:
+    src: kubelet-config.yaml.j2
+    dest: /var/lib/kubelet/kubelet-config.yaml
+
+- name: Create service file for kubelet 
+  become: true
+  template:
+    src: kubelet.service.j2
+    dest: /etc/systemd/system/kubelet.service
+
+- name: Get kubelet service status
+  ansible.builtin.systemd:
+    name: kubelet
+  register: kubelet_service_status
+
+- name: Debug | kubelet_service_status
+  debug:
+    msg: "{{ kubelet_service_status }}"
+
+- name: Start kubelet
+  become: true
+  ansible.builtin.systemd:
+    name: kubelet
+    daemon_reload: true
+    state: started  
+    enabled: true

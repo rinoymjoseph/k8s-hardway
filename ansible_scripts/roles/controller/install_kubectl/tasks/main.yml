@@ -1,0 +1,12 @@
+- name: Copy kubectl to /usr/local/bin
+  become: true
+  ansible.builtin.copy:
+    src: "{{ node_packages_dir }}/kubectl"
+    dest: /usr/local/bin
+    remote_src: true
+
+- name: Set execution permission on kubectl
+  become: true
+  file:
+    path: /usr/local/bin/kubectl
+    mode: +x

@@ -1,0 +1,21 @@
+- name: Create download directory
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "{{ node_packages_dir }}"
+    - "{{ node_pki_dir }}"
+    - "{{ node_kubeconfigs_dir }}"
+
+- name: Create directories
+  become: true
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - /etc/cni/net.d
+    - /opt/cni/bin
+    - /var/lib/kubelet
+    - /var/lib/kube-proxy
+    - /var/lib/kubernetes
+    - /var/run/kubernetes
