@@ -1,0 +1,19 @@
+- name: Copy system:kube-apiserver-to-kubelet ClusterRole manifest
+  become: true
+  template:
+    src: cluster_role_binding.yaml
+    dest: "{{ node_manifests_dir }}/cluster_role.yaml"
+
+- name: Copy system:kube-apiserver-to-kubelet ClusterRoleBinding manifest
+  become: true
+  template:
+    src: cluster_role_binding.yaml
+    dest: "{{ node_manifests_dir }}/cluster_role_binding.yaml"
+
+- name: Create system:kube-apiserver-to-kubelet ClusterRole 
+  shell: |
+    kubectl apply -f {{ node_manifests_dir }}/cluster_role.yaml --kubeconfig={{ node_kubeconfigs_dir }}/admin.kubeconfig
+
+- name: Create system:kube-apiserver-to-kubelet ClusterRoleBinding 
+  shell: |
+    kubectl apply -f {{ node_manifests_dir }}/cluster_role_binding.yaml --kubeconfig={{ node_kubeconfigs_dir }}/admin.kubeconfig

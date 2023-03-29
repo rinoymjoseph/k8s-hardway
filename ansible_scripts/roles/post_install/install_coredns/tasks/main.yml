@@ -1,0 +1,32 @@
+- name: Create directory core_dns app
+  file:
+    path: "{{ core_dns_dir }}"
+    state: directory
+
+- name: core_dns_yaml_url
+  set_fact:
+    core_dns_yaml_url: "{{ k8s_apps | selectattr('name','eq', 'core_dns_yaml') | map(attribute='url') | first }}"
+
+- name: Download core_dns_yaml
+  get_url:
+    url: "{{ core_dns_yaml_url }}"
+    dest: "{{ core_dns_dir }}/coredns.yaml.sed"
+
+- name: core_dns_deploy_script_url
+  set_fact:
+    core_dns_deploy_script_url: "{{ k8s_apps | selectattr('name','eq', 'core_dns_deploy_script') | map(attribute='url') | first }}"
+
+- name: Download core_dns_deploy_script
+  get_url:
+    url: "{{ core_dns_deploy_script_url }}"
+    dest: "{{ core_dns_dir }}/deploy.sh"
+
+- name: Prepare corendns.yaml
+  shell: bash ./deploy.sh -s -i 10.32.0.10 > coredns.yaml
+  args:
+    chdir: "{{ core_dns_dir }}"
+
+- name: Apply corendns.yaml
+  shell: kubectl apply -f coredns.yaml
+  args:
+    chdir: "{{ core_dns_dir }}"

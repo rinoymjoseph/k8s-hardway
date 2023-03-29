@@ -23,10 +23,7 @@
 86:AC:41:3F:AD:DD 192.168.0.142
 
 sudo apt update
-sudo apt install ansible
-ansible-galaxy collection install community.general
-sudo apt install python3-pip
-pip3 install proxmoxer
-sudo apt install ansible-core
+sudo apt install ansible-core python3-pip unzip sshpass -y
 python3 -m pip install --upgrade --user ansible
-ansible-galaxy collection install ansible.posix
+sudo reboot
+ansible-galaxy collection install community.general ansible.posix

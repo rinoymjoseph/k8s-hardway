@@ -41,3 +41,8 @@ sed -i "s/etcd_key: \"\"/etcd_key: \"\/calico-secrets\/etcd-key\"/g" calico.yaml
 # Setup the POD CIDR ENV
 sed -i 's/# - name: CALICO_IPV4POOL_CIDR/- name: CALICO_IPV4POOL_CIDR/g' calico.yaml
 sed -i 's/#   value: "192.168.0.0\/16"/  value: "10.200.0.0\/16"/g' calico.yaml
+-------------------------------------------------------------------------------------
+
+cat pki/kube_apiserver/kubernetes.pem | base64 -w 0
+
+https://192.168.0.151:2379

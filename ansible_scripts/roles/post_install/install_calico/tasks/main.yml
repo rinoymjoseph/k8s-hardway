@@ -1,0 +1,26 @@
+- name: Create directory calico app
+  file:
+    path: "{{ calico_dir }}"
+    state: directory
+
+- name: etcd_key
+  set_fact:
+    etcd_key: "{{ lookup('file', '{{ kube_apiserver_cert_dir }}/kubernetes.pem') | b64encode }}"
+
+- name: etcd_cert
+  set_fact:
+    etcd_cert: "{{ lookup('file', '{{ kube_apiserver_cert_dir }}/kubernetes-key.pem') | b64encode }}"
+  
+- name: etcd_ca
+  set_fact:
+    etcd_ca: "{{ lookup('file', '{{ pki_ca_dir }}/ca.pem') | b64encode }}"
+  
+- name: Create calico-etcd.yaml
+  template:
+    src: calico-etcd.yaml.j2
+    dest: "{{ calico_dir }}/calico-etcd.yaml"
+
+- name: Apply calico-etcd.yaml
+  shell: kubectl apply -f calico-etcd.yaml
+  args:
+    chdir: "{{ calico_dir }}"

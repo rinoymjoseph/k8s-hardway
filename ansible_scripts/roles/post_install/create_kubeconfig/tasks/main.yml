@@ -1,0 +1,36 @@
+- name: Set-cluster
+  shell: |
+    kubectl config set-cluster rinoys \
+      --certificate-authority={{ pki_ca_dir }}/ca.pem \
+      --embed-certs=true \
+      --server=https://192.168.0.151:6443 \
+      --kubeconfig={{ admin_kubeconfig_dir }}/admin-remote.kubeconfig
+
+- name: Set-credentials
+  shell: |
+    kubectl config set-credentials admin \
+      --client-certificate={{ admin_cert_dir }}/admin.pem \
+      --client-key={{ admin_cert_dir }}/admin-key.pem \
+      --embed-certs=true \
+      --kubeconfig={{ admin_kubeconfig_dir }}/admin-remote.kubeconfig
+
+- name: Set-context
+  shell: |
+    kubectl config set-context rinoys \
+      --cluster=rinoys \
+      --user=admin \
+      --kubeconfig={{ admin_kubeconfig_dir }}/admin-remote.kubeconfig
+
+- name: Use-context
+  shell: |
+    kubectl config use-context rinoys --kubeconfig={{ admin_kubeconfig_dir }}/admin-remote.kubeconfig
+
+- name: Create kube directory
+  file:
+    path: "~/.kube"
+    state: directory
+
+- name: Copy admin-remote.kubeconfig to ~/.kube
+  ansible.builtin.copy:
+    src: "{{ admin_kubeconfig_dir }}/admin-remote.kubeconfig"
+    dest: ~/.kube/config
