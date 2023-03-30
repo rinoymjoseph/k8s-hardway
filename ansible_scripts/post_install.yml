@@ -4,5 +4,6 @@
   roles:
     - role: build_config
     # - role: post_install/create_kubeconfig
-    # - role: post_install/install_coredns
+    #- role: post_install/install_coredns
     - role: post_install/install_calico
+    #- role: post_install/install_flannel

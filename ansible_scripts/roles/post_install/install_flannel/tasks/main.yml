@@ -1,0 +1,14 @@
+- name: Create directory for flannel
+  file:
+    path: "{{ flannel_dir }}"
+    state: directory
+  
+- name: Create kube-flannel.yml
+  template:
+    src: kube-flannel.yml.j2
+    dest: "{{ flannel_dir }}/kube-flannel.yml"
+
+- name: Apply kube-flannel.yml
+  shell: kubectl apply -f kube-flannel.yml
+  args:
+    chdir: "{{ flannel_dir }}"

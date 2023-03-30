@@ -2,18 +2,42 @@
   file:
     path: "{{ calico_dir }}"
     state: directory
-
-- name: etcd_key
-  set_fact:
-    etcd_key: "{{ lookup('file', '{{ kube_apiserver_cert_dir }}/kubernetes.pem') | b64encode }}"
-
-- name: etcd_cert
-  set_fact:
-    etcd_cert: "{{ lookup('file', '{{ kube_apiserver_cert_dir }}/kubernetes-key.pem') | b64encode }}"
   
-- name: etcd_ca
+- name: Generate etcd cert
+  shell: cat {{ kube_apiserver_cert_dir }}/kubernetes.pem | base64 -w 0
+  register: generate_etcd_cert
+
+- name: set_fact | etcd_cert
   set_fact:
-    etcd_ca: "{{ lookup('file', '{{ pki_ca_dir }}/ca.pem') | b64encode }}"
+    etcd_cert: "{{ generate_etcd_cert.stdout }}"
+
+- name: Generate etcd key
+  shell: cat {{ kube_apiserver_cert_dir }}/kubernetes-key.pem | base64 -w 0
+  register: generate_etcd_key
+
+- name: set_fact | etcd_key_base64
+  set_fact:
+    etcd_key: "{{ generate_etcd_key.stdout }}"
+
+- name: Generate etcd ca
+  shell: cat {{ pki_ca_dir }}/ca.pem | base64 -w 0
+  register: generate_etcd_ca
+
+- name: set_fact | etcd_ca_base64
+  set_fact:
+    etcd_ca: "{{ generate_etcd_ca.stdout }}"
+
+# - name: etcd_cert
+#   set_fact:
+#     etcd_cert: "{{ lookup('file', '{{ kube_apiserver_cert_dir }}/kubernetes.pem') | b64encode }}"
+
+# - name: etcd_key
+#   set_fact:
+#     etcd_key: "{{ lookup('file', '{{ kube_apiserver_cert_dir }}/kubernetes-key.pem') | b64encode }}"
+  
+# - name: etcd_ca
+#   set_fact:
+#     etcd_ca: "{{ lookup('file', '{{ pki_ca_dir }}/ca.pem') | b64encode }}"
   
 - name: Create calico-etcd.yaml
   template:
