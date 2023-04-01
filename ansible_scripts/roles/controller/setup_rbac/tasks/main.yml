@@ -1,7 +1,7 @@
 - name: Copy system:kube-apiserver-to-kubelet ClusterRole manifest
   become: true
   template:
-    src: cluster_role_binding.yaml
+    src: cluster_role.yaml
     dest: "{{ node_manifests_dir }}/cluster_role.yaml"
 
 - name: Copy system:kube-apiserver-to-kubelet ClusterRoleBinding manifest
