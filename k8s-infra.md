@@ -16,11 +16,20 @@
 86:AC:41:71:70:7D 192.168.0.149 - k8s-bootstrap
 86:AC:41:AF:EC:2B 192.168.0.148 - k3s-agent-1
 86:AC:41:D7:CF:7B 192.168.0.147 - k3s-master
-86:AC:41:03:C2:7B 192.168.0.146
-86:AC:41:36:AD:BE 192.168.0.145
+86:AC:41:03:C2:7B 192.168.0.146 - prometheus
+86:AC:41:36:AD:BE 192.168.0.145 - terraform
 86:AC:41:55:07:F2 192.168.0.144
 86:AC:41:98:04:17 192.168.0.143
 86:AC:41:3F:AD:DD 192.168.0.142
+
+echo "$USER ALL=(ALL) NOPASSWD:ALL" | sudo tee -a /etc/sudoers
+sudo visudo -c
+
+sudo apt update
+sudo apt install software-properties-common unzip sshpass python3-pip -y
+sudo add-apt-repository --yes --update ppa:ansible/ansible
+sudo apt install ansible
+pip3 install kubernetes
 
 sudo apt update
 sudo apt install ansible-core python3-pip unzip sshpass -y

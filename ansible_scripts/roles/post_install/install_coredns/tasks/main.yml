@@ -30,3 +30,14 @@
   shell: kubectl apply -f coredns.yaml
   args:
     chdir: "{{ core_dns_dir }}"
+
+- name: Wait till the Object is created
+  kubernetes.core.k8s_info:
+    kind: Pod
+    namespace: kube-system
+    label_selectors:
+      k8s-app=kube-dns
+  register: coredns_pod_info
+  until: coredns_pod_info | json_query('resources[*].status.phase') | unique == ["Running"]
+  delay: 10
+  retries: 12

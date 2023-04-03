@@ -1,10 +1,3 @@
-# - name: set_fact all_host_ip_list
-#   set_fact:
-#     nodes_host_ip_list: []
-#     controllers_host_ip_list: []
-#     workers_host_ip_list: []
-#     load_balancer_ip_address: "{{ hostvars.load_balancer.ansible_host }}"
-
 - name: load_balancer_ip_address
   debug:
     msg: "{{ load_balancer_ip_address }}"

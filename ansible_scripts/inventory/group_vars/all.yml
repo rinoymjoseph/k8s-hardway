@@ -79,6 +79,7 @@ k8s_apps_dir: "{{ ansible_env.HOME + '/k8s_apps' }}"
 core_dns_dir: "{{ k8s_apps_dir }}/core_dns"
 calico_dir: "{{ k8s_apps_dir }}/calico"
 flannel_dir: "{{ k8s_apps_dir }}/flannel"
+prometheus_dir: "{{ k8s_apps_dir }}/prometheus"
 
 nodes_host_ip_list: []
 controllers_host_ip_list: []

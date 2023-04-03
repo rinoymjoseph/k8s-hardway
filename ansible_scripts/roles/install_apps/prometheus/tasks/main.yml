@@ -1,0 +1,24 @@
+- name: Create directory for prometheus
+  file:
+    path: "{{ prometheus_dir }}"
+    state: directory
+
+- name: Create namespace - monitoring
+  kubernetes.core.k8s:
+    name: monitoring
+    api_version: v1
+    kind: Namespace
+    state: present
+  
+- name: Copy manifests
+  template:
+    src: "{{ item }}"
+    dest: "{{ prometheus_dir }}/{{ item }}"
+  with_items:
+    - cluster-role.yaml
+    - config-map.yaml
+    - deployment.yaml
+    - service.yaml
+
+- name: Apply manifests
+  shell: kubectl apply -f {{ prometheus_dir }}

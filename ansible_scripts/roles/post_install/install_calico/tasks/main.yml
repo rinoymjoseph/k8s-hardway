@@ -26,18 +26,6 @@
 - name: set_fact | etcd_ca_base64
   set_fact:
     etcd_ca: "{{ generate_etcd_ca.stdout }}"
-
-# - name: etcd_cert
-#   set_fact:
-#     etcd_cert: "{{ lookup('file', '{{ kube_apiserver_cert_dir }}/kubernetes.pem') | b64encode }}"
-
-# - name: etcd_key
-#   set_fact:
-#     etcd_key: "{{ lookup('file', '{{ kube_apiserver_cert_dir }}/kubernetes-key.pem') | b64encode }}"
-  
-# - name: etcd_ca
-#   set_fact:
-#     etcd_ca: "{{ lookup('file', '{{ pki_ca_dir }}/ca.pem') | b64encode }}"
   
 - name: Create calico-etcd.yaml
   template:
@@ -48,3 +36,25 @@
   shell: kubectl apply -f calico-etcd.yaml
   args:
     chdir: "{{ calico_dir }}"
+
+- name: Wait till the Object is created
+  kubernetes.core.k8s_info:
+    kind: Pod
+    namespace: kube-system
+    label_selectors:
+      k8s-app=calico-kube-controllers
+  register: calico_kube_controllers_pod_info
+  until: calico_kube_controllers_pod_info | json_query('resources[*].status.phase') | unique == ["Running"]
+  delay: 10
+  retries: 12
+
+- name: Wait till the Object is created
+  kubernetes.core.k8s_info:
+    kind: Pod
+    namespace: kube-system
+    label_selectors:
+      k8s-app=calico-node
+  register: calico_node_pod_info
+  until: calico_node_pod_info | json_query('resources[*].status.phase') | unique == ["Running"]
+  delay: 10
+  retries: 12

@@ -1,0 +1,62 @@
+---
+- hosts: nodes
+  gather_facts: true
+  roles:
+    - role: build_config
+    - role: common/set_host_name
+    - role: common/update_etc_hosts
+
+- hosts: bootstrap
+  gather_facts: true
+  roles:
+    - role: bootstrap/download_packages
+    - role: bootstrap/install_packages
+    - role: bootstrap/provision_pki/ca
+    - role: bootstrap/provision_pki/admin
+    - role: bootstrap/provision_pki/worker
+    - role: bootstrap/provision_pki/kube_controller_manager
+    - role: bootstrap/provision_pki/kube_proxy
+    - role: bootstrap/provision_pki/kube_scheduler
+    - role: bootstrap/provision_pki/front_proxy
+    - role: bootstrap/provision_pki/kube_apiserver
+    - role: bootstrap/provision_pki/service_account
+    - role: bootstrap/provision_kubeconfig/worker
+    - role: bootstrap/provision_kubeconfig/kube_proxy
+    - role: bootstrap/provision_kubeconfig/kube_controller_manager
+    - role: bootstrap/provision_kubeconfig/kube_scheduler
+    - role: bootstrap/provision_kubeconfig/admin
+    - role: bootstrap/provision_de_config
+
+- hosts: controllers
+  gather_facts: true
+  roles:
+    - role: controller/create_directories
+    - role: controller/copy_artifacts
+    - role: controller/install_etcd
+    - role: controller/install_kubectl
+    - role: controller/install_kube_apiserver
+    - role: controller/install_kube_controller_manager
+    - role: controller/install_kube_scheduler
+
+- hosts: controllers[0]
+  gather_facts: true
+  roles:
+    - role: controller/setup_rbac
+
+- hosts: workers
+  gather_facts: true
+  roles:
+    - role: worker/install_packages
+    - role: worker/disable_swap
+    - role: worker/create_directories
+    - role: worker/copy_artifacts
+    - role: worker/configure_cni
+    - role: worker/install_kubelet
+    - role: worker/install_kube_proxy
+  
+- hosts: bootstrap
+  gather_facts: true
+  roles:
+    - role: post_install/create_kubeconfig
+    - role: post_install/install_coredns
+    - role: post_install/install_calico
