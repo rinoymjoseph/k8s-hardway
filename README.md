@@ -1,11 +1,8 @@
 ## 1. Prerequisites
 
 - Proxmox server.
-
 - An Ubuntu 22.04 template provisioned on Proxmox.
-
 - Terraform. Please refer Terraform installation on Ubuntu 22.04 for installation of Terraform.
-
 - A way to provision static ip addresses mapped to mac addresses (I used a home router).
 
 ## 2. System Diagaram
