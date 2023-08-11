@@ -116,7 +116,7 @@ resource "null_resource" "ks8-bootstrap-file" {
     host        = "192.168.0.149"  
     type        = "ssh"
     port        = 22
-    user        = "ability"
+    user        = "rinoy"
     password    = "welcome123#"
   }
 }
@@ -138,7 +138,7 @@ resource "null_resource" "ks8-bootstrap-remote-exec" {
     host        = "192.168.0.149"  
     type        = "ssh"
     port        = 22
-    user        = "ability"
+    user        = "rinoy"
     password    = "welcome123#"
   }
 }
