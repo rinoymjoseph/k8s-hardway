@@ -19,7 +19,7 @@ resource "proxmox_vm_qemu" "k8s-bootstrap" {
   name          = "k8s-bootstrap"
   vmid          = 149
   target_node   = "proxmox"
-  clone         = "Ubuntu-Server-22.04"
+  clone         = "Ubuntu-Server-22-04-SSD"
   full_clone    = false
   memory        = 2048
   cores         = 1
@@ -36,7 +36,7 @@ resource "proxmox_vm_qemu" "k8s-controller-1" {
   name          = "k8s-controller-1"
   vmid          = 151
   target_node   = "proxmox"
-  clone         = "Ubuntu-Server-22.04"
+  clone         = "Ubuntu-Server-22-04-SSD"
   full_clone    = false
   memory        = 4096
   cores         = 2
@@ -53,7 +53,7 @@ resource "proxmox_vm_qemu" "k8s-worker-1" {
   name          = "k8s-worker-1"
   vmid          = 161
   target_node   = "proxmox"
-  clone         = "Ubuntu-Server-22.04"
+  clone         = "Ubuntu-Server-22-04-SSD"
   full_clone    = false
   memory        = 4096
   cores         = 2
@@ -74,20 +74,9 @@ resource "null_resource" "ks8-bootstrap-file" {
   }
 
   provisioner "file" {
-    source      = "ansible_scripts.zip"
+    source      = "../../ansible_scripts.zip"
     destination = "scripts/ansible_scripts.zip"
   }
-
-  connection {
-    host        = "192.168.0.149"  
-    type        = "ssh"
-    port        = 22
-    user        = "ability"
-    password    = "welcome123#"
-  }
-}
-
-resource "null_resource" "ks8-bootstrap-remote-exec" {
 
   provisioner "remote-exec" {
     inline = [
@@ -104,8 +93,7 @@ resource "null_resource" "ks8-bootstrap-remote-exec" {
     host        = "192.168.0.149"  
     type        = "ssh"
     port        = 22
-    user        = "ability"
+    user        = "rinoy"
     password    = "welcome123#"
   }
 }
-
