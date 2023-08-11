@@ -99,7 +99,7 @@ resource "proxmox_vm_qemu" "k8s-worker-3" {
   }
 }
 
-resource "null_resource" "ks8-bootstrap-file" {
+resource "null_resource" "k8s-bootstrap-file" {
 
   provisioner "remote-exec" {
     inline = [
