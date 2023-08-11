@@ -5,6 +5,12 @@ cni_plugins_version: v1.0.1
 crio_version: 1.23
 crio_os: xUbuntu_22.04
 
+# Cerfificate settings
+TLS_C: "HY"
+TLS_L: "Hyrule"
+TLS_OU: "Link"
+TLS_ST: "Akkala"
+
 workers:
 - host_name: k8s-worker-1
   pod_cidr: 10.200.0.0/24
@@ -48,11 +54,6 @@ node_pki_dir: "{{ node_artifacts_dir + '/pki' }}"
 node_kubeconfigs_dir: "{{ node_artifacts_dir + '/kubeconfigs' }}"
 node_de_config_dir: "{{ node_artifacts_dir + '/de_config' }}"
 node_manifests_dir: "{{ ansible_env.HOME + '/manifests' }}"
-
-TLS_C: "IN"
-TLS_L: "Kochi"
-TLS_OU: "Rinoys"
-TLS_ST: "Kerala"
 
 # bootstrap directories
 downloads_dir: "{{ ansible_env.HOME + '/downloads' }}"
