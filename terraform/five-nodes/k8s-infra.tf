@@ -19,7 +19,7 @@ resource "proxmox_vm_qemu" "k8s-bootstrap" {
   name          = "k8s-bootstrap"
   vmid          = 149
   target_node   = "proxmox"
-  clone         = "Ubuntu-Server-22.04"
+  clone         = "Ubuntu-Server-22.04-ssd"
   full_clone    = false
   memory        = 2048
   cores         = 1
@@ -36,7 +36,7 @@ resource "proxmox_vm_qemu" "k8s-controller-1" {
   name          = "k8s-controller-1"
   vmid          = 151
   target_node   = "proxmox"
-  clone         = "Ubuntu-Server-22.04"
+  clone         = "Ubuntu-Server-22.04-ssd"
   full_clone    = false
   memory        = 4096
   cores         = 2
@@ -53,7 +53,7 @@ resource "proxmox_vm_qemu" "k8s-worker-1" {
   name          = "k8s-worker-1"
   vmid          = 161
   target_node   = "proxmox"
-  clone         = "Ubuntu-Server-22.04"
+  clone         = "Ubuntu-Server-22.04-ssd"
   full_clone    = false
   memory        = 4096
   cores         = 2
@@ -70,7 +70,7 @@ resource "proxmox_vm_qemu" "k8s-worker-2" {
   name          = "k8s-worker-2"
   vmid          = 162
   target_node   = "proxmox"
-  clone         = "Ubuntu-Server-22.04"
+  clone         = "Ubuntu-Server-22.04-ssd"
   full_clone    = false
   memory        = 4096
   cores         = 2
@@ -87,7 +87,7 @@ resource "proxmox_vm_qemu" "k8s-worker-3" {
   name          = "k8s-worker-3"
   vmid          = 163
   target_node   = "proxmox"
-  clone         = "Ubuntu-Server-22.04"
+  clone         = "Ubuntu-Server-22.04-ssd"
   full_clone    = false
   memory        = 4096
   cores         = 2
